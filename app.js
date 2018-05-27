@@ -37,5 +37,17 @@ var bot = new builder.UniversalBot(connector);
 bot.set('storage', tableStorage);
 
 bot.dialog('/', function (session) {
-    session.send('You said ' + session.message.text + ' at devday TAIPEI');
+    var msg = new builder.Message(session);
+    msg.attachmentLayout(builder.AttachmentLayout.carousel);
+    var attachments = [
+        new builder.HeroCard(session)
+            .title("")
+            .subtitle("")
+            .text("")
+            .images([builder.CardImage.create(session, "")])
+    ];
+    msg.attachments(attachments);
+    session.send(msg);
 });
+
+
