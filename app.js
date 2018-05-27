@@ -47,7 +47,9 @@ bot.dialog('/', function (session) {
             .images([builder.CardImage.create(session, "http://fm.cnbc.com/applications/cnbc.com/resources/img/editorial/2016/04/20/103564443-GettyImages-594827903.1910x1000.jpg")])
             .buttons([
                 builder.CardAction.imBack(session, "確定", "確定"),
-                builder.CardAction.call(session, "+8613636377246", "打電話"),
+                builder.CardAction.call(session, "+886xxxxxxxxx", "打電話"),
+                builder.CardAction.openUrl(session, "https://www.microsoft.com/taiwan/events/2018devdays", "打開首頁")
+                
             ])
     ];
     msg.attachments(attachments);
