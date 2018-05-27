@@ -41,10 +41,14 @@ bot.dialog('/', function (session) {
     msg.attachmentLayout(builder.AttachmentLayout.carousel);
     var attachments = [
         new builder.HeroCard(session)
-            .title("")
-            .subtitle("")
-            .text("")
-            .images([builder.CardImage.create(session, "")])
+            .title("歡迎參加亞太技術年會")
+            .subtitle("微軟歡迎大家，希望和大家多多交流")
+            .text("這是一個卡片正文")
+            .images([builder.CardImage.create(session, "http://fm.cnbc.com/applications/cnbc.com/resources/img/editorial/2016/04/20/103564443-GettyImages-594827903.1910x1000.jpg")])
+            .buttons([
+                builder.CardAction.imBack(session, "確定", "確定"),
+                builder.CardAction.imBack(session, "取消", "取消"),
+            ])
     ];
     msg.attachments(attachments);
     session.send(msg);
