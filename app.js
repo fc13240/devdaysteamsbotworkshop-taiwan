@@ -9,9 +9,9 @@ var botbuilder_azure = require("botbuilder-azure");
 // Setup Restify Server
 var server = restify.createServer();
 server.listen(process.env.port || process.env.PORT || 3978, function () {
-   console.log('%s listening to %s', server.name, server.url); 
+    console.log('%s listening to %s', server.name, server.url);
 });
-  
+
 // Create chat connector for communicating with the Bot Framework Service
 var connector = new builder.ChatConnector({
     appId: process.env.MicrosoftAppId,
@@ -47,7 +47,7 @@ bot.dialog('/', function (session) {
             .images([builder.CardImage.create(session, "http://fm.cnbc.com/applications/cnbc.com/resources/img/editorial/2016/04/20/103564443-GettyImages-594827903.1910x1000.jpg")])
             .buttons([
                 builder.CardAction.imBack(session, "確定", "確定"),
-                builder.CardAction.imBack(session, "取消", "取消"),
+                builder.CardAction.call(session, "+8613636377246", "打電話"),
             ])
     ];
     msg.attachments(attachments);
