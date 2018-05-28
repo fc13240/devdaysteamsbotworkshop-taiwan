@@ -1,8 +1,6 @@
 # 為Microsoft Teams開發智能對話機器人
 > 作者：陳希章  2018年5月29日 @ 臺北 亞太技術年會
 
-## 你可以直接用根目錄下面的Devdays.zip文件，在Microsoft Teams中進行加載，測試效果
-
 
 ## 第一步，使用标准的Web App创建一个bot，在网页中调试，配置Git 仓库，下载代码，修改代码，提交，调试
 ```javascript
@@ -177,3 +175,7 @@
 ```	
 	
 通过qnamaker.ai 了解背后的原理
+
+
+
+## 你可以直接用根目錄下面的Devdays.zip文件，在Microsoft Teams中進行加載，測試效果
