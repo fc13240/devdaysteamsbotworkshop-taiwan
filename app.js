@@ -36,24 +36,42 @@ var tableStorage = new botbuilder_azure.AzureBotStorage({ gzipData: false }, azu
 var bot = new builder.UniversalBot(connector);
 bot.set('storage', tableStorage);
 
-bot.dialog('/', function (session) {
+var luisAppId = process.env.LuisAppId;
+var luisAPIKey = process.env.LuisAPIKey;
+var luisAPIHostName = process.env.LuisAPIHostName || 'westus.api.cognitive.microsoft.com';
 
-    //2. card
-    var msg = new builder.Message(session);
-    msg.attachmentLayout(builder.AttachmentLayout.carousel);
-    var attachments = [
-        new builder.HeroCard(session)
-            .title("歡迎參加亞太技術年會")
-            .subtitle("微軟歡迎大家，希望和大家多多交流")
-            .text("這是一個卡片正文")
-            .images([builder.CardImage.create(session, "http://fm.cnbc.com/applications/cnbc.com/resources/img/editorial/2016/04/20/103564443-GettyImages-594827903.1910x1000.jpg")])
-            .buttons([
-                builder.CardAction.imBack(session, "確定", "確定"),
-                builder.CardAction.call(session, "+886xxxxxxxxx", "打電話"),
-                builder.CardAction.openUrl(session, "https://www.microsoft.com/taiwan/events/2018devdays", "打開首頁")
-            ])
-    ];
-    msg.attachments(attachments);
-    session.send(msg);
+const LuisModelUrl = 'https://' + luisAPIHostName + '/luis/v2.0/apps/' + luisAppId + '?subscription-key=' + luisAPIKey;
 
-});
+// Create a recognizer that gets intents from LUIS, and add it to the bot
+var recognizer = new builder.LuisRecognizer(LuisModelUrl);
+bot.recognizer(recognizer);
+
+// Add a dialog for each intent that the LUIS app recognizes.
+// See https://docs.microsoft.com/en-us/bot-framework/nodejs/bot-builder-nodejs-recognize-intent-luis 
+bot.dialog('GreetingDialog',
+    (session) => {
+        session.send('You reached the Greeting intent. You said \'%s\'.', session.message.text);
+        session.endDialog();
+    }
+).triggerAction({
+    matches: 'Greeting'
+})
+
+bot.dialog('HelpDialog',
+    (session) => {
+        session.send('You reached the Help intent. You said \'%s\'.', session.message.text);
+        session.endDialog();
+    }
+).triggerAction({
+    matches: 'Help'
+})
+
+bot.dialog('CancelDialog',
+    (session) => {
+        session.send('You reached the Cancel intent. You said \'%s\'.', session.message.text);
+        session.endDialog();
+    }
+).triggerAction({
+    matches: 'Cancel'
+})
+
