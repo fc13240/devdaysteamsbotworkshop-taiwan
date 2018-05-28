@@ -5,6 +5,7 @@ A simple echo bot for the Microsoft Bot Framework.
 var restify = require('restify');
 var builder = require('botbuilder');
 var botbuilder_azure = require("botbuilder-azure");
+var builder_cognitiveservices = require("botbuilder-cognitiveservices");
 
 // Setup Restify Server
 var server = restify.createServer();
@@ -36,42 +37,54 @@ var tableStorage = new botbuilder_azure.AzureBotStorage({ gzipData: false }, azu
 var bot = new builder.UniversalBot(connector);
 bot.set('storage', tableStorage);
 
-var luisAppId = process.env.LuisAppId;
-var luisAPIKey = process.env.LuisAPIKey;
-var luisAPIHostName = process.env.LuisAPIHostName || 'westus.api.cognitive.microsoft.com';
+// Recognizer and and Dialog for preview QnAMaker service
+var previewRecognizer = new builder_cognitiveservices.QnAMakerRecognizer({
+    knowledgeBaseId: process.env.QnAKnowledgebaseId,
+    authKey: process.env.QnAAuthKey || process.env.QnASubscriptionKey
+});
 
-const LuisModelUrl = 'https://' + luisAPIHostName + '/luis/v2.0/apps/' + luisAppId + '?subscription-key=' + luisAPIKey;
+var basicQnAMakerPreviewDialog = new builder_cognitiveservices.QnAMakerDialog({
+    recognizers: [previewRecognizer],
+    defaultMessage: 'No match! Try changing the query terms!',
+    qnaThreshold: 0.3
+}
+);
 
-// Create a recognizer that gets intents from LUIS, and add it to the bot
-var recognizer = new builder.LuisRecognizer(LuisModelUrl);
-bot.recognizer(recognizer);
+bot.dialog('basicQnAMakerPreviewDialog', basicQnAMakerPreviewDialog);
 
-// Add a dialog for each intent that the LUIS app recognizes.
-// See https://docs.microsoft.com/en-us/bot-framework/nodejs/bot-builder-nodejs-recognize-intent-luis 
-bot.dialog('GreetingDialog',
-    (session) => {
-        session.send('You reached the Greeting intent. You said \'%s\'.', session.message.text);
-        session.endDialog();
-    }
-).triggerAction({
-    matches: 'Greeting'
-})
+// Recognizer and and Dialog for GA QnAMaker service
+var recognizer = new builder_cognitiveservices.QnAMakerRecognizer({
+    knowledgeBaseId: process.env.QnAKnowledgebaseId,
+    authKey: process.env.QnAAuthKey || process.env.QnASubscriptionKey, // Backward compatibility with QnAMaker (Preview)
+    endpointHostName: process.env.QnAEndpointHostName
+});
 
-bot.dialog('HelpDialog',
-    (session) => {
-        session.send('You reached the Help intent. You said \'%s\'.', session.message.text);
-        session.endDialog();
-    }
-).triggerAction({
-    matches: 'Help'
-})
+var basicQnAMakerDialog = new builder_cognitiveservices.QnAMakerDialog({
+    recognizers: [recognizer],
+    defaultMessage: 'No match! Try changing the query terms!',
+    qnaThreshold: 0.3
+}
+);
 
-bot.dialog('CancelDialog',
-    (session) => {
-        session.send('You reached the Cancel intent. You said \'%s\'.', session.message.text);
-        session.endDialog();
-    }
-).triggerAction({
-    matches: 'Cancel'
-})
+bot.dialog('basicQnAMakerDialog', basicQnAMakerDialog);
 
+bot.dialog('/', //basicQnAMakerDialog);
+    [
+        function (session) {
+            var qnaKnowledgebaseId = process.env.QnAKnowledgebaseId;
+            var qnaAuthKey = process.env.QnAAuthKey || process.env.QnASubscriptionKey;
+            var endpointHostName = process.env.QnAEndpointHostName;
+
+            // QnA Subscription Key and KnowledgeBase Id null verification
+            if ((qnaAuthKey == null || qnaAuthKey == '') || (qnaKnowledgebaseId == null || qnaKnowledgebaseId == ''))
+                session.send('Please set QnAKnowledgebaseId, QnAAuthKey and QnAEndpointHostName (if applicable) in App Settings. Learn how to get them at https://aka.ms/qnaabssetup.');
+            else {
+                if (endpointHostName == null || endpointHostName == '')
+                    // Replace with Preview QnAMakerDialog service
+                    session.replaceDialog('basicQnAMakerPreviewDialog');
+                else
+                    // Replace with GA QnAMakerDialog service
+                    session.replaceDialog('basicQnAMakerDialog');
+            }
+        }
+    ]);
