@@ -2,7 +2,7 @@
 > 作者：陳希章  2018年5月29日 @ 臺北 亞太技術年會
 
 
-## 第一步，使用标准的Web App创建一个bot，在网页中调试，配置Git 仓库，下载代码，修改代码，提交，调试
+## 第一步，使用標準的Web App創建一個bot，在網頁中調試，配置Git 倉庫，下載代碼，修改代碼，提交，調試
 ```javascript
 	bot.dialog('/', function (session) {
 	    //1. basic
@@ -10,7 +10,7 @@
 	});
 ```
 
-## 第二步，修改成图文卡片消息
+## 第二步，修改成圖文卡片消息
 ```javascript
 	bot.dialog('/', function (session) {
 	
@@ -35,7 +35,7 @@
 	});
  ```
 
-## 第三步，修改成Form的形式进行会话
+## 第三步，修改成Form的形式進行會話
 ```javascript
 	//3.form
 	bot.dialog('/',[
@@ -59,14 +59,14 @@
 	]);
 ```
 
-## 第四步，使用LUIS来进行会话
+## 第四步，使用LUIS來進行會話
 
-	在Bot Service中添加三个设置
+	在Bot Service中添加三個設置（需要通過 luis.ai 先創建好相關的語義模型）
 	LuisAPIHostName
 	LuisAppId
 	LuisAPIKey
 	
-	修改代码如下
+	修改代碼如下
 ```javascript
 	var luisAppId = process.env.LuisAppId;
 	var luisAPIKey = process.env.LuisAPIKey;
@@ -108,18 +108,18 @@
 	})
 ```
 
-	通过luis.ai 了解背后的原理（如何定义意图，训练等）
+	通過luis.ai 了解背後的原理（如何定義意圖，訓練等）
 
 ## 第五步，改成使用QnAMaker的方式
 
-	首先，安装一个特殊的包 npm install botbuilder-cognitiveservices --save
-	其次，增加一个包导入的命令  var builder_cognitiveservices = require("botbuilder-cognitiveservices");
-	接着，修改应用的配置
+	首先，安裝一個特殊的包 npm install botbuilder-cognitiveservices --save
+	其次，增加一個包導入的命令  var builder_cognitiveservices = require("botbuilder-cognitiveservices");
+	接著，修改應用的配置（需要先通過 qnamaker.ai 先創建知識庫）
 	QnAKnowledgebaseId
 	QnAAuthKey
 	QnAEndpointHostName
   
-	最后，修改代码
+	最後，修改代碼
 ```javascript
 	// Recognizer and and Dialog for preview QnAMaker service
 	var previewRecognizer = new builder_cognitiveservices.QnAMakerRecognizer({
@@ -174,7 +174,7 @@
 	    ]);
 ```	
 	
-通过qnamaker.ai 了解背后的原理
+通過qnamaker.ai 了解背後的原理
 
 
 
