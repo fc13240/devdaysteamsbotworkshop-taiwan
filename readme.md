@@ -6,7 +6,7 @@
 ```javascript
 	bot.dialog('/', function (session) {
 	    //1. basic
-	    session.send('You said ' + session.message.text);
+	    session.send('您好，我是機器人小强，我收到了您的消息 ' + session.message.text);
 	});
 ```
 
@@ -40,23 +40,23 @@
 	//3.form
 	bot.dialog('/',[
 	    function (session) {
-	        builder.Prompts.text(session, "Hello... What's your name?");
+	        builder.Prompts.text(session, "您好... 我能知道您的姓名嗎?");
 	    },
 	    function (session, results) {
 	        session.userData.name = results.response;
-	        builder.Prompts.number(session, "Hi " + results.response + ", How many years have you been coding?");
+	        builder.Prompts.number(session, "您好 " + results.response + ", 請問您做編程已經有多少年了?");
 	    },
 	    function (session, results) {
 	        session.userData.coding = results.response;
-	        builder.Prompts.choice(session, "What language do you code Node using?", ["JavaScript", "CoffeeScript", "TypeScript"]);
+	        builder.Prompts.choice(session, "您最喜歡的脚本編程語言是?", ["JavaScript", "CoffeeScript", "TypeScript"]);
 	    },
 	    function (session, results) {
 	        session.userData.language = results.response.entity;
-	        session.send("Got it... " + session.userData.name +
-	            " you've been programming for " + session.userData.coding +
-	            " years and use " + session.userData.language + ".");
+	        session.send("太酷了... " + session.userData.name +
+	            " 您已經有了 " + session.userData.coding +
+	            " 年的 " + session.userData.language + "經驗.");
 	    }
-	]);
+]);
 ```
 
 ## 第四步，使用LUIS來進行會話
@@ -82,7 +82,7 @@
 	// See https://docs.microsoft.com/en-us/bot-framework/nodejs/bot-builder-nodejs-recognize-intent-luis 
 	bot.dialog('GreetingDialog',
 	    (session) => {
-	        session.send('You reached the Greeting intent. You said \'%s\'.', session.message.text);
+	        session.send('您的意圖是跟我打招呼. 您說了 \'%s\'.', session.message.text);
 	        session.endDialog();
 	    }
 	).triggerAction({
@@ -91,7 +91,7 @@
 	
 	bot.dialog('HelpDialog',
 	    (session) => {
-	        session.send('You reached the Help intent. You said \'%s\'.', session.message.text);
+	        session.send('您是否需要幫助');
 	        session.endDialog();
 	    }
 	).triggerAction({
@@ -100,12 +100,13 @@
 	
 	bot.dialog('CancelDialog',
 	    (session) => {
-	        session.send('You reached the Cancel intent. You said \'%s\'.', session.message.text);
+	        session.send('看起來您是想結束跟我的對話，不要啊…..');
 	        session.endDialog();
 	    }
 	).triggerAction({
 	    matches: 'Cancel'
 	})
+
 ```
 
 	通過luis.ai 了解背後的原理（如何定義意圖，訓練等）
@@ -129,7 +130,7 @@
 	
 	var basicQnAMakerPreviewDialog = new builder_cognitiveservices.QnAMakerDialog({
 	    recognizers: [previewRecognizer],
-	    defaultMessage: 'No match! Try changing the query terms!',
+	    defaultMessage: '對不起，我不懂你在説什麽',
 	    qnaThreshold: 0.3
 	}
 	);
@@ -145,7 +146,7 @@
 	
 	var basicQnAMakerDialog = new builder_cognitiveservices.QnAMakerDialog({
 	    recognizers: [recognizer],
-	    defaultMessage: 'No match! Try changing the query terms!',
+	    defaultMessage: '對不起，我不懂你在説什麽',
 	    qnaThreshold: 0.3
 	}
 	);
@@ -172,6 +173,7 @@
 	            }
 	        }
 	    ]);
+
 ```	
 	
 通過qnamaker.ai 了解背後的原理
