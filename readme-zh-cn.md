@@ -19,13 +19,13 @@
 	    msg.attachmentLayout(builder.AttachmentLayout.carousel);
 	    var attachments = [
 	        new builder.HeroCard(session)
-	            .title("欢迎参加亚太技术年会")
+	            .title("欢迎参加Microsoft 365 DevDays")
 	            .subtitle("微软欢迎大家，希望和大家多多交流")
 	            .text("这是一个卡片正文")
 	            .images([builder.CardImage.create(session, "http://fm.cnbc.com/applications/cnbc.com/resources/img/editorial/2016/04/20/103564443-GettyImages-594827903.1910x1000.jpg")])
 	            .buttons([
 	                builder.CardAction.imBack(session, "确定", "确定"),
-	                builder.CardAction.call(session, "+886xxxxxxxxx", "打电话"),
+	                builder.CardAction.call(session, "+86xxxxxxxxx", "打电话"),
 	                builder.CardAction.openUrl(session, "https://www.microsoft.com/taiwan/events/2018devdays", "打开首页")
 	            ])
 	    ];
